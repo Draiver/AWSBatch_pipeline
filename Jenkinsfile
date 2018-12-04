@@ -10,8 +10,7 @@ pipeline {
                 }
           }
           }
-        }
-       stage('Read data from output') {
+        stage('Read data from output') {
             steps {
                 script {
                     def job_queue =  readJSON text: env.job_queue
