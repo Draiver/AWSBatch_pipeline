@@ -11,4 +11,11 @@ pipeline {
           }
           }
         }
+       stage('Read data from output') {
+            steps {
+                script {
+                    def job_queue =  readJSON text: env.job_queue
+                    sh 'aws batch submit-job --job-name $jobQueueName --job-queue HighPriority  --job-definition sleep60'  
+                    }
+           }
 }
