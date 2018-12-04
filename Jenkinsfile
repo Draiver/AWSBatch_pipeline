@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
         stages {
         stage('Read data from AWS Batch') {
           steps {
