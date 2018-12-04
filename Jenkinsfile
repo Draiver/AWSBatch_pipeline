@@ -4,8 +4,11 @@ pipeline {
         stages {
         stage('Read data from AWS Batch') {
           steps {
-                sh 'aws batch describe-job-queues --job-queues --region us-east-1'
+              script {
+                  def job_queue = sh returnStdout: true, script: sh 'aws batch describe-job-queues --job-queues --region us-east-1'
+                  env.job_queue = job_queue
                 }
+          }
           }
         }
 }
