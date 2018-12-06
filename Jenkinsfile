@@ -1,7 +1,10 @@
+#!/usr/bin/env groovy
+
 pipeline {
     agent any
-
+    
         stages {
+            
         stage('Read data from AWS Batch') {
           steps {
               script {
@@ -13,19 +16,15 @@ pipeline {
             }
         } 
         stage('Submit new job to AWS Batch') {
-          when {
-            branch 'master'             //only run these steps on the master branch
-          }
-          steps {
+           steps {
               script {
                  def job_def =  readJSON text: env.job_def
                  def job_name =  readJSON text: env.job_name
-                 echo "${job_name.jobQueues.jobQueueName}"
-                 echo "${job_def.jobDefinitions.jobDefinitionArn}"
-                 sh "aws batch submit-job --job-name example --job-queue ${job_name.jobQueues.jobQueueName}  --job-definition ${job_def.jobDefinitions.jobDefinitionName}"
+                    job_name.jobQueues.each { jobQueue ->
+                    sh "aws batch submit-job --job-name example --job-queue ${jobQueue.jobQueueName}  --job-definition first-run-job-definition"
                  }
                }
               }
-            }
-       }
-
+        }
+}
+}
