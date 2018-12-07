@@ -4,7 +4,11 @@ pipeline {
     agent any
     
         stages {
-            
+        when {
+        // skip this stage unless branch is NOT master
+        not {
+          branch "master"
+        }    
         stage('Read data from AWS Batch') {
           steps {
               script {
@@ -20,9 +24,10 @@ pipeline {
               script {
                  def job_def =  readJSON text: env.job_def
                  def job_name =  readJSON text: env.job_name
-                    job_name.jobQueues.each { jobQueue ->
-                    sh "aws batch submit-job --job-name example --job-queue ${jobQueue.jobQueueName}  --job-definition first-run-job-definition"
-                 }
+                 //   job_name.jobQueues.each { jobQueue ->
+                 //   sh "aws batch submit-job --job-name example --job-queue ${jobQueue.jobQueueName}  --job-definition first-run-job-definition"
+                  echo "${job_name}"
+                }
                }
               }
         }
