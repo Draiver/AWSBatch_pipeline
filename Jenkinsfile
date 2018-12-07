@@ -6,7 +6,6 @@ pipeline {
         stages {
             
         stage('Read data from AWS Batch') {
-        
           steps {
               script {
                   def job_name = sh returnStdout: true, script: 'aws batch describe-job-queues --job-queues --region us-east-1'
@@ -17,17 +16,11 @@ pipeline {
             }
         } 
         stage('Submit new job to AWS Batch') {
-            when {
-        // skip this stage unless on Master branch
-            branch "master"
-        }
            steps {
               script {
                  def job_def =  readJSON text: env.job_def
                  def job_name =  readJSON text: env.job_name
                     job_name.jobQueues.each { jobQueue ->
-                 def job_definition = sh returnStdout: true, script: 'cat job_name | jq -r '.status.active' | select(.jobDefinitionName)'
-                    echo = "${job_definition}" 
                     sh "aws batch submit-job --job-name example --job-queue ${jobQueue.jobQueueName}  --job-definition first-run-job-definition"
                  }
                }
