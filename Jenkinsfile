@@ -16,6 +16,11 @@ pipeline {
             }
         } 
         stage('Submit new job to AWS Batch') {
+            when {
+        // skip this stage unless branch is NOT master
+        not {
+          branch "master"
+        }
            steps {
               script {
                  def job_def =  readJSON text: env.job_def
