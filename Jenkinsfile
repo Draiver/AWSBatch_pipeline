@@ -24,7 +24,6 @@ pipeline {
         stage('Submit new job to AWS Batch') {
           steps {
               script {
-//                 def job_def =  readJSON text: env.job_def
                 def job_name =  readJSON text: env.job_name
                 job_name.jobQueues.each { jobQueue ->
                 def job_id = sh returnStdout: true, script: "aws batch submit-job --job-name example --job-queue ${jobQueue.jobQueueName}  --job-definition ${env.job_def}"
